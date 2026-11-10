@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#16251f">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316251f'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='48' fill='%23e5c27b'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+  <title>Hearthwild — A quiet road, a brave heart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="world" aria-label="Hearthwild game world"></canvas>
+    <div class="film-grain"></div>
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">✦</div><div><div class="brand-title">HEARTHWILD</div><div class="brand-subtitle">THE BRACKEN VALE</div></div></div>
+      <div class="location"><span class="location-dot"></span><span id="location-name">THE OLD ROAD</span><span class="location-divider">/</span><span class="weather">☀ &nbsp;CLEAR SKIES</span></div>
+      <button class="icon-button" id="settings-button" aria-label="Settings">⚙</button>
+    </header>
+    <section class="quest-card panel" aria-label="Current quest">
+      <div class="eyebrow"><span class="quest-star">✦</span> YOUR JOURNEY</div>
+      <h1 id="quest-title">A village in need</h1>
+      <p id="quest-copy">Find the village of Bellwether and hear what troubles its people.</p>
+      <div class="quest-progress"><span id="quest-progress-fill"></span></div>
+      <div class="quest-footer"><span id="quest-stage">THE BRACKEN VALE</span><span id="quest-count">0 / 3</span></div>
+    </section>
+    <div class="compass" aria-label="Compass"><span class="compass-n">N</span><span class="compass-tick"></span><span class="compass-arrow">▲</span><span class="compass-label" id="compass-label">BELLWETHER</span></div>
+    <div class="hud-bottom-left"><div class="health-row"><span class="heart">♥</span><div class="health-track"><div class="health-fill" id="health-fill"></div></div><span class="health-number" id="health-number">100</span></div><div class="stamina-row"><span class="stamina-icon">◈</span><div class="stamina-track"><div class="stamina-fill" id="stamina-fill"></div></div></div><div class="bottom-hint"><kbd>W A S D</kbd> MOVE <span>·</span> <kbd>SHIFT</kbd> RUN</div></div>
+    <div class="hud-bottom-right"><div class="mini-map-frame"><canvas id="minimap" width="156" height="116"></canvas><span class="map-label">THE VALE</span></div><div class="map-hint"><kbd>M</kbd> MAP</div></div>
+    <div class="interaction-prompt" id="interaction-prompt"><kbd>E</kbd><span>Speak with the villager</span></div>
+    <div class="combat-banner" id="combat-banner"><span>⚔</span> OUTPOST RAIDERS <span id="enemy-count">3</span></div>
+    <div class="combat-hint" id="combat-hint"><kbd>SPACE</kbd> STRIKE <span>·</span> <kbd>SHIFT</kbd> DODGE</div>
+    <div class="touch-controls" id="touch-controls"><div class="dpad"><button data-move="up">▲</button><div><button data-move="left">◀</button><button data-move="down">▼</button><button data-move="right">▶</button></div></div><button class="touch-action" data-action="interact">TALK<br><small>E</small></button><button class="touch-action strike" data-action="attack">STRIKE<br><small>✦</small></button></div>
+    <div class="toast" id="toast"></div>
+    <section class="dialogue panel hidden" id="dialogue-panel">
+      <div class="dialogue-heading"><div class="speaker-avatar" id="speaker-avatar">✦</div><div><div class="eyebrow" id="speaker-role">BELLWETHER VILLAGER</div><h2 id="speaker-name">Mara</h2></div><button class="close-button" id="close-dialogue" aria-label="Close dialogue">×</button></div>
+      <div class="dialogue-body" id="dialogue-body"></div>
+      <div class="dialogue-choices" id="dialogue-choices"></div>
+      <form class="ask-form" id="ask-form"><span class="ask-spark">✧</span><input id="ask-input" autocomplete="off" placeholder="Ask anything, or request an action…" aria-label="Ask the villager something"><button type="submit" aria-label="Send">↑</button></form>
+      <div class="dialogue-foot"><span>THEY KNOW THEIR WORLD. ASK THEM.</span><button id="ai-settings-link">AI SETTINGS</button></div>
+    </section>
+    <section class="settings-modal hidden" id="settings-modal" role="dialog" aria-modal="true">
+      <div class="settings-card panel"><button class="close-button settings-close" id="close-settings">×</button><div class="eyebrow">MAKE THE VALE YOURS</div><h2>Settings</h2><label class="setting-row"><span>Master volume</span><input type="range" id="volume" min="0" max="100" value="45"></label><label class="setting-row"><span>Reduced motion</span><input type="checkbox" id="reduced-motion"></label><div class="settings-divider"></div><div class="eyebrow">AI CONVERSATION</div><p class="settings-note">Connect a public OpenAI-compatible chat service for open-ended NPC dialogue. Without a key, villagers still answer with contextual in-world responses.</p><label class="api-label" for="api-endpoint">API endpoint</label><input class="api-input" id="api-endpoint" placeholder="https://api.openai.com/v1/chat/completions">
+      <label class="api-label" for="api-model">Public model name</label><input class="api-input" id="api-model" placeholder="Qwen/Qwen2.5-7B-Instruct">
+      <label class="api-label" for="api-key">API key <span>(stored in this browser only)</span></label><input class="api-input" id="api-key" type="password" placeholder="Paste your provider key">
+      <div class="settings-actions"><button class="secondary-button" id="clear-ai">Clear key</button><button class="primary-button" id="save-settings">Save settings</button></div><p class="settings-disclaimer">AI answers are sent to the endpoint you configure. Never enter a key on a shared device.</p></div>
+    </section>
+    <section class="map-overlay hidden" id="map-overlay"><div class="map-card panel"><button class="close-button map-close" id="close-map">×</button><div class="eyebrow">YOUR CHARTED COUNTRY</div><h2>The Bracken Vale</h2><canvas id="bigmap" width="720" height="460"></canvas><div class="map-legend"><span><i class="legend-player"></i> YOU</span><span><i class="legend-home"></i> BELLWETHER</span><span><i class="legend-danger"></i> RAIDER OUTPOST</span></div><div class="map-note">Wander the old road east. The land remembers its own paths.</div></div></section>
+    <div class="start-screen" id="start-screen"><div class="start-sky"></div><div class="start-content"><div class="start-emblem">✦</div><div class="start-overline">AN OPEN-WORLD TALE</div><h1>Hearthwild</h1><p class="start-subtitle">A quiet road. A brave heart.</p><div class="start-rule"></div><p class="start-copy">The Bracken Vale is a country of old paths, warm hearths, and people who look after one another. Lately, strangers have been taking more than they can carry.</p><button class="begin-button" id="begin-button">STEP INTO THE VALE <span>→</span></button><div class="start-controls">WASD TO WALK &nbsp;·&nbsp; E TO SPEAK &nbsp;·&nbsp; SPACE TO DEFEND</div></div><div class="start-credit">A SMALL TALE ABOUT SHOWING UP</div></div>
+    <div class="loading-screen" id="loading-screen"><div class="loading-mark">✦</div><span>THE VALE IS WAKING</span></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
