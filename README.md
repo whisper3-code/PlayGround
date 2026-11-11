@@ -16,3 +16,14 @@
 - 👤 [Explore the creator's projects](https://go.ondev.store/whisper3-code).
 - 🌍 [Create with OMGithub](https://go.ondev.store/).
 <!-- omgithub:readme:end -->
+
+## Hearth & Hollow
+
+A small browser-playable, top-down fantasy RPG. Open `index.html` directly or serve the folder with any static web server.
+
+- **Move:** WASD / arrow keys (touch arrows on mobile)
+- **Interact / talk:** E (or click a nearby villager)
+- **Attack:** Space
+- **Request a villager action:** R, then type a simple request
+
+Meet Bramblewick's people, travel east to the quarry, defeat the Ashen Company, free the captives, and escort them home. Optional live NPC conversation uses Hugging Face's public Inference Router with a user-supplied token; without one, the game has built-in contextual dialogue and quest responses.
